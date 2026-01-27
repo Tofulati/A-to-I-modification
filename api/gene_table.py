@@ -2,12 +2,12 @@ import json
 import pickle
 import os
 
-BASE_DIR = "database"
+BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "database")
 
 def handler(request):
-    q = request.get("query", {})
-    gene = q.get("gene_name")
-    sample = q.get("sample")
+    query = request.get("queryStringParameters") or {}
+    gene = query.get("gene_name")
+    sample = query.get("sample")
 
     if not gene or not sample:
         return {
@@ -23,8 +23,8 @@ def handler(request):
 
     if not os.path.exists(pkl_path):
         return {
-            "statusCode": 400,
-            "body": json.dumps({"error": "Gene not found"})  
+            "statusCode": 404,
+            "body": json.dumps({"error": "Gene not found"})
         }
 
     with open(pkl_path, "rb") as f:
@@ -34,6 +34,8 @@ def handler(request):
 
     return {
         "statusCode": 200,
-        "headers": {"Content-Type": "application/json"},
+        "headers": {
+            "Content-Type": "application/json"
+        },
         "body": json.dumps(records)
     }
