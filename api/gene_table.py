@@ -14,6 +14,7 @@ class handler(BaseHTTPRequestHandler):
 
         if not gene or not sample:
             self.send_response(400)
+            self.send_header("Content-Type", "application/json")
             self.end_headers()
             self.wfile.write(
                 json.dumps({"error": "gene_name and sample required"}).encode()
@@ -28,6 +29,7 @@ class handler(BaseHTTPRequestHandler):
 
         if not os.path.exists(pkl_path):
             self.send_response(404)
+            self.send_header("Content-Type", "application/json")
             self.end_headers()
             self.wfile.write(
                 json.dumps({"error": "Gene not found"}).encode()
@@ -47,6 +49,7 @@ class handler(BaseHTTPRequestHandler):
 
         except Exception as e:
             self.send_response(500)
+            self.send_header("Content-Type", "application/json")
             self.end_headers()
             self.wfile.write(
                 json.dumps({
@@ -54,10 +57,3 @@ class handler(BaseHTTPRequestHandler):
                     "type": type(e).__name__
                 }).encode()
             )
-
-        records = df.to_dict(orient="records")
-
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json")
-        self.end_headers()
-        self.wfile.write(json.dumps(records).encode())
