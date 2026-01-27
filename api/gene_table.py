@@ -1,41 +1,45 @@
 import json
-import pickle
 import os
+import pickle
+from http.server import BaseHTTPRequestHandler
+from urllib.parse import urlparse, parse_qs
 
-BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "database")
+BASE_DIR = "database"
 
-def handler(request):
-    query = request.get("queryStringParameters") or {}
-    gene = query.get("gene_name")
-    sample = query.get("sample")
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        query = parse_qs(urlparse(self.path).query)
+        gene = query.get("gene_name", [None])[0]
+        sample = query.get("sample", [None])[0]
 
-    if not gene or not sample:
-        return {
-            "statusCode": 400,
-            "body": json.dumps({"error": "gene_name and sample required"})
-        }
+        if not gene or not sample:
+            self.send_response(400)
+            self.end_headers()
+            self.wfile.write(
+                json.dumps({"error": "gene_name and sample required"}).encode()
+            )
+            return
 
-    pkl_path = os.path.join(
-        BASE_DIR,
-        f"{sample}_per_read_pkls",
-        f"{gene}_per_read.pkl"
-    )
+        pkl_path = os.path.join(
+            BASE_DIR,
+            f"{sample}_per_read_pkls",
+            f"{gene}_per_read.pkl"
+        )
 
-    if not os.path.exists(pkl_path):
-        return {
-            "statusCode": 404,
-            "body": json.dumps({"error": "Gene not found"})
-        }
+        if not os.path.exists(pkl_path):
+            self.send_response(404)
+            self.end_headers()
+            self.wfile.write(
+                json.dumps({"error": "Gene not found"}).encode()
+            )
+            return
 
-    with open(pkl_path, "rb") as f:
-        df = pickle.load(f)
+        with open(pkl_path, "rb") as f:
+            df = pickle.load(f)
 
-    records = df.to_dict(orient="records")
+        records = df.to_dict(orient="records")
 
-    return {
-        "statusCode": 200,
-        "headers": {
-            "Content-Type": "application/json"
-        },
-        "body": json.dumps(records)
-    }
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps(records).encode())
