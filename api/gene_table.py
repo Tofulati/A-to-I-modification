@@ -34,8 +34,26 @@ class handler(BaseHTTPRequestHandler):
             )
             return
 
-        with open(pkl_path, "rb") as f:
-            df = pickle.load(f)
+        try:
+            with open(pkl_path, "rb") as f:
+                df = pickle.load(f)
+
+            records = df.to_dict(orient="records")
+
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps(records).encode())
+
+        except Exception as e:
+            self.send_response(500)
+            self.end_headers()
+            self.wfile.write(
+                json.dumps({
+                    "error": str(e),
+                    "type": type(e).__name__
+                }).encode()
+            )
 
         records = df.to_dict(orient="records")
 
