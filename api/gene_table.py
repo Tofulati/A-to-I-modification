@@ -1,6 +1,7 @@
 import json
 import os
 import pickle
+import numpy as np
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
@@ -40,12 +41,26 @@ class handler(BaseHTTPRequestHandler):
             with open(pkl_path, "rb") as f:
                 df = pickle.load(f)
 
+            # Convert numpy types to native Python
             records = df.to_dict(orient="records")
+            for rec in records:
+                for k, v in rec.items():
+                    if isinstance(v, (np.integer, np.floating)):
+                        rec[k] = v.item()
+                    elif isinstance(v, np.ndarray):
+                        rec[k] = v.tolist()  # Convert arrays to lists
 
+            # Stream JSON to avoid huge memory usage
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.end_headers()
-            self.wfile.write(json.dumps(records).encode())
+
+            self.wfile.write(b"[")
+            for i, rec in enumerate(records):
+                if i > 0:
+                    self.wfile.write(b",")
+                self.wfile.write(json.dumps(rec, ensure_ascii=False).encode("utf-8"))
+            self.wfile.write(b"]")
 
         except Exception as e:
             self.send_response(500)
