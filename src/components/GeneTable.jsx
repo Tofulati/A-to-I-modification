@@ -1,48 +1,64 @@
 import { useState, useEffect } from "react";
 import "../App.css"; 
 
-export default function GeneTable({ gene, sample }) {
+export default function GeneTable({ gene }) {
   const [rows, setRows] = useState(null);
   const [error, setError] = useState(null);
-
+  
   useEffect(() => {
     setRows(null);
     setError(null);
-
-    fetch(`/api/gene_table?gene_name=${gene}&sample=${sample}`)
+    
+    fetch(`/api/gene_table?gene_name=${gene}`)
       .then((res) => {
         if (!res.ok) throw new Error("Gene not found");
         return res.json();
       })
-      .then(setRows)
+      .then((data) => {
+        setRows(data);
+      })
       .catch((err) => setError(err.message));
-  }, [gene, sample]);
-
+  }, [gene]);
+  
   if (error) return <p className="error">{error}</p>;
-  if (!rows) return <p className="loading">Loading...</p>;
-
-  const cols = Object.keys(rows[0]);
-
+  if (!rows || rows.length === 0) return <p className="loading">Loading...</p>;
+  
+  // Define column order and display names
+  const columnConfig = [
+    { key: "Feature", label: "Feature" },
+    { key: "Modification", label: "Modification" },
+    { key: "MR01_1", label: "MR01-1 (Raw)" },
+    { key: "MR01_1_mean", label: "MR01-1 (Mean %)" },
+    { key: "MR01_2", label: "MR01-2 (Raw)" },
+    { key: "MR01_2_mean", label: "MR01-2 (Mean %)" }
+  ];
+  
+  // Helper function to format values
+  const formatValue = (value) => {
+    if (value === null || value === undefined) return "N/A";
+    if (typeof value === "number") return value.toFixed(2);
+    return String(value);
+  };
+  
   return (
     <div className="gene-table-container">
       <h2 className="table-title">
-        {gene} - {sample}
+        {gene} - Modification Summary
       </h2>
-
       <div className="table-wrapper">
         <table className="gene-table">
           <thead>
             <tr>
-              {cols.map((c) => (
-                <th key={c}>{c}</th>
+              {columnConfig.map((col) => (
+                <th key={col.key}>{col.label}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {rows.map((r, i) => (
               <tr key={i}>
-                {cols.map((c) => (
-                  <td key={c}>{String(r[c])}</td>
+                {columnConfig.map((col) => (
+                  <td key={col.key}>{formatValue(r[col.key])}</td>
                 ))}
               </tr>
             ))}

@@ -4,14 +4,12 @@ import './App.css'
 
 export default function App() {
   const [gene, setGene] = useState("AZIN1");
-  const [sample, setSample] = useState("MR01-1");
   const [submitted, setSubmitted] = useState(null);
 
   return (
     <div className="app">
       <main>
         <h1>A-to-I Modification Table</h1>
-
         <div className="input-container">
           <div>
             <label>Gene name:</label>
@@ -21,34 +19,17 @@ export default function App() {
               placeholder="AZIN1"
             />
           </div>
-
-          <div>
-            <label>Sample name:</label>
-            <select
-              value={sample}
-              onChange={e => setSample(e.target.value)}
-            >
-              <option value="MR01-1">MR01-1</option>
-              <option value="MR01-2">MR01-2</option>
-            </select>
-          </div>
-
           <button
-            onClick={() => setSubmitted({ gene, sample })}
+            onClick={() => setSubmitted({ gene })}
             disabled={!gene}
           >
-            Load
+            Load Gene Data
           </button>
         </div>
-
         {submitted && (
-          <GeneTable
-            gene={submitted.gene}
-            sample={submitted.sample}
-          />
+          <GeneTable gene={submitted.gene} />
         )}
       </main>
-
       <footer>
         <p>
           Li Lab + Jiang Lab © 2026 &nbsp; | &nbsp;
