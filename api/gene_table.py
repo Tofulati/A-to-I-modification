@@ -7,7 +7,7 @@ import re
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
-BASE_DIR = "database"
+BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "database")
 
 def extract_mean(val):
     match = re.match(r"([0-9.]+)", str(val))
@@ -27,15 +27,15 @@ class handler(BaseHTTPRequestHandler):
             )
             return
         
-        # Load from processed_gene directory
-        pkl_path = os.path.join(BASE_DIR, "processed_gene", f"{gene}.pkl")
+        # Load directly from database directory
+        pkl_path = os.path.join(BASE_DIR, f"{gene}.pkl")
         
         if not os.path.exists(pkl_path):
             self.send_response(404)
             self.send_header("Content-Type", "application/json")
             self.end_headers()
             self.wfile.write(
-                json.dumps({"error": "Gene not found"}).encode()
+                json.dumps({"error": f"Gene {gene} not found"}).encode()
             )
             return
         
