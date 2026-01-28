@@ -23,20 +23,27 @@ export default function GeneTable({ gene }) {
   if (error) return <p className="error">{error}</p>;
   if (!rows || rows.length === 0) return <p className="loading">Loading...</p>;
   
-  // Define column order and display names
+  // Define column order and display names to match your data
   const columnConfig = [
     { key: "Feature", label: "Feature" },
     { key: "Modification", label: "Modification" },
-    { key: "MR01_1", label: "MR01-1 (Raw)" },
-    { key: "MR01_1_mean", label: "MR01-1 (Mean %)" },
-    { key: "MR01_2", label: "MR01-2 (Raw)" },
-    { key: "MR01_2_mean", label: "MR01-2 (Mean %)" }
+    { key: "Count_MR01_1", label: "Count MR01-1" },
+    { key: "CPK_MR01_1", label: "CPK MR01-1" },
+    { key: "MR01_1", label: "MR01-1" },
+    { key: "Count_MR01_2", label: "Count MR01-2" },
+    { key: "CPK_MR01_2", label: "CPK MR01-2" },
+    { key: "MR01_2", label: "MR01-2" },
+    { key: "MR01_1_mean", label: "MR01-1 Mean" },
+    { key: "MR01_2_mean", label: "MR01-2 Mean" }
   ];
   
   // Helper function to format values
   const formatValue = (value) => {
     if (value === null || value === undefined) return "N/A";
-    if (typeof value === "number") return value.toFixed(2);
+    if (typeof value === "number") {
+      // Format numbers to 6 decimal places
+      return value.toFixed(6);
+    }
     return String(value);
   };
   

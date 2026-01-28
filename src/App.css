@@ -5,136 +5,171 @@ html, body {
   flex-direction: column;
   align-items: center;
   font-family: Arial, sans-serif;
+}
 
-  .app {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
 
-    main {
-      flex: 1;
-      width: 100%;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+main {
+  flex: 1;
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-      .input-container {
-        display: flex;
-        flex-direction: column;
-        max-width: 400px;
-        width: 100%;
-        gap: 0.5rem;
-        margin-bottom: 2rem;
+.input-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  width: 100%;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
 
-        label {
-          padding: 5px 0;
-          font-size: 1.1rem;
-        }
+.input-container label {
+  padding: 5px 0;
+  font-size: 1.1rem;
+}
 
-        input, select {
-          padding: 0.5rem;
-          font-size: 1rem;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
+.input-container input,
+.input-container select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 
-        button {
-          padding: 0.5rem 1rem;
-          font-size: 1rem;
-          border: none;
-          border-radius: 4px;
-          background-color: #4CAF50;
-          color: white;
-          cursor: pointer;
-          transition: background-color 0.2s;
-        }
+.input-container button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
 
-        button:disabled {
-          background-color: #999;
-          cursor: not-allowed;
-        }
+.input-container button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
 
-        button:hover:not(:disabled) {
-          background-color: #45a049;
-        }
-      }
+.input-container button:hover:not(:disabled) {
+  background-color: #45a049;
+}
 
-      /* Gene Table Styles */
-      .gene-table-container {
-        width: 100vw;         
-        max-width: 100%;     
-        overflow-x: auto;    
-        margin-top: 1rem;
+/* Gene Table Styles */
+.gene-table-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  margin-top: 1rem;
+  padding: 0 1rem;
+}
 
-        .table-title {
-          margin-bottom: 1rem;
-          font-size: 1.3rem;
-          font-weight: bold;
-          text-align: left;  
-          padding-left: 1rem;
-        }
+.table-title {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-align: center;
+}
 
-        .table-wrapper {
-          width: 100%;
-          overflow-x: auto;
-        }
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
 
-        table.gene-table {
-          width: 100%;       
-          border-collapse: collapse;
-          min-width: 800px;  
+table.gene-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
 
-          th, td {
-            border: 1px solid #ddd;
-            padding: 0.5rem 0.75rem;
-            text-align: left;
-          }
+table.gene-table th,
+table.gene-table td {
+  border: 1px solid #ddd;
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+}
 
-          th {
-            background-color: #f4f4f4;
-            font-weight: bold;
-          }
+table.gene-table th {
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
 
-          tr:nth-child(even) {
-            background-color: #f9f9f9;
-          }
+table.gene-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
 
-          tr:hover {
-            background-color: #e2f0d9;
-          }
-        }
-      }
+table.gene-table tr:hover {
+  background-color: #e2f0d9;
+}
 
-      /* Loading & error messages */
-      .loading, .error {
-        margin-top: 1rem;
-        font-size: 1.1rem;
-        color: #555;
-      }
+/* Make specific columns more compact */
+table.gene-table td:first-child,
+table.gene-table th:first-child {
+  font-weight: 600;
+}
 
-      .error {
-        color: red;
-      }
-    }
+/* Loading & error messages */
+.loading,
+.error {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: #555;
+  text-align: center;
+}
 
-    footer {
-      margin-top: auto;
-      font-size: 1rem;
-      padding: 1rem 2rem;
-      text-align: center;
-      width: 100%;
-      background-color: #f2f2f2;
+.error {
+  color: red;
+}
 
-      a {
-        color: #0077cc;
-        text-decoration: none;
-      }
+footer {
+  margin-top: auto;
+  font-size: 1rem;
+  padding: 1rem 2rem;
+  text-align: center;
+  width: 100%;
+  background-color: #f2f2f2;
+}
 
-      a:hover {
-        text-decoration: underline;
-      }
-    }
+footer a {
+  color: #0077cc;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  table.gene-table {
+    font-size: 0.75rem;
+  }
+  
+  table.gene-table th,
+  table.gene-table td {
+    padding: 0.4rem 0.5rem;
+  }
+  
+  .table-title {
+    font-size: 1.1rem;
   }
 }
